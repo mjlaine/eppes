@@ -68,9 +68,9 @@ def eppesupdate(theta, mu, w, sig, n, w00=None, maxn=0, maxsteprel=None):
        :param w: The accuracy of mu as a covariance matrix
        :param sig: Covariance parameter
        :param n: The accuracy of sig as imaginary observations
-       :param w00: Optimal minimal w00
-       :param maxn: Optimal maximum n
-       :param maxsteprel: Optimal maximum relative change in mu
+       :param w00: Optional minimal w00
+       :param maxn: Optional maximum n
+       :param maxsteprel: Optional maximum relative change in mu
        :return: mu_new, w_new, sig_new, n_new updated parameters
 
     """
@@ -98,12 +98,12 @@ def eppesupdate(theta, mu, w, sig, n, w00=None, maxn=0, maxsteprel=None):
 
 def propose(nsample, mu, sig, bounds=None, maxtry=1000):
     """Propose new sample given mu, sig and bounds.
-    :param nsample:
-    :param mu:
-    :param sig:
-    :param bounds:
-    :param maxtry:
-    :return:
+    :param nsample: How many parameter vector to propose
+    :param mu: Mean of the proposal
+    :param sig: Covariance matrix for the proposal
+    :param bounds: Optional upper and lower bounds
+    :param maxtry: Optional maximum tries for the bounded value
+    :return: sample of size nsample * npar, where npar = len(mu)
     """
     x = np.random.multivariate_normal(mu, sig, size=nsample)
     # no check on bounds
@@ -239,9 +239,9 @@ def tomatrix(x):
 
 
 # do not use this
-def logpropose(nsample, mu, sig, bounds=[], maxtry=1000):
+def _logpropose(nsample, mu, sig, bounds=[], maxtry=1000):
     """Propose new sample given sample mu, sig and bounds, using logN """
-    mus = log(mu)
+    mus = np.log(mu)
     sigs = sig / np.outer(mu, mu)
     x = np.exp(np.random.multivariate_normal(mus, sigs, size=nsample))
     # no check on bounds
